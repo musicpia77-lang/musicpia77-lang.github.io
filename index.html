@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="naver-site-verification" content="99adc22634eeb90f1b11bd12e1f84bd7fcbad548" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 루틴 설계 1:1 컨설팅 | 지원쌤</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --ink: #1A1A1A;
+    --ink-light: #555;
+    --accent: #E8621A;
+    --accent-soft: #FFF0E8;
+    --accent2: #2D6A4F;
+    --line: #E5E5DF;
+    --card: #FFFFFF;
+    --highlight: #FFF8E1;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 24px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, #FDEBD8 0%, transparent 70%);
+    z-index: 0;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, #E8F5EE 0%, transparent 70%);
+    z-index: 0;
+  }
+
+  .hero-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.2s forwards;
+  }
+
+  .hero h1 {
+    font-size: clamp(32px, 7vw, 52px);
+    font-weight: 900;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.35s forwards;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+    position: relative;
+    display: inline-block;
+  }
+
+  .hero h1 em::after {
+    content: '';
+    position: absolute;
+    bottom: 2px; left: 0; right: 0;
+    height: 6px;
+    background: var(--accent);
+    opacity: 0.15;
+    border-radius: 4px;
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--ink-light);
+    line-height: 1.8;
+    margin-bottom: 36px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.5s forwards;
+  }
+
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 44px;
+    font-size: 14px;
+    color: var(--ink-light);
+    opacity: 0;
+    animation: fadeUp 0.6s 0.65s forwards;
+  }
+
+  .hero-meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .hero-meta .dot {
+    width: 4px; height: 4px;
+    background: var(--line);
+    border-radius: 50%;
+  }
+
+  .cta-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.8s forwards;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--accent);
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 18px 32px;
+    border-radius: 14px;
+    text-decoration: none;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(232,98,26,0.3);
+    width: fit-content;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(232,98,26,0.4);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink-light);
+    font-size: 14px;
+    text-decoration: none;
+    transition: color 0.2s;
+    width: fit-content;
+  }
+
+  .btn-secondary:hover { color: var(--ink); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink-light);
+    font-size: 12px;
+    opacity: 0;
+    animation: fadeIn 1s 1.4s forwards;
+  }
+
+  .scroll-hint .arrow {
+    width: 1px; height: 36px;
+    background: linear-gradient(to bottom, transparent, var(--ink-light));
+    animation: pulse 2s infinite;
+  }
+
+  /* ── PAIN SECTION ── */
+  .section {
+    padding: 80px 24px;
+  }
+
+  .section-inner {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .section h2 {
+    font-size: clamp(24px, 5vw, 36px);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-bottom: 32px;
+  }
+
+  .checklist {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 40px;
+    border: 1.5px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px 24px;
+    font-size: 15px;
+    line-height: 1.6;
+    border-bottom: 1.5px solid var(--line);
+    background: var(--card);
+    transition: background 0.2s;
+  }
+
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li:hover { background: var(--accent-soft); }
+
+  .check-icon {
+    width: 22px; height: 22px;
+    min-width: 22px;
+    background: var(--accent-soft);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+    font-size: 12px;
+  }
+
+  .insight-box {
+    background: var(--ink);
+    color: white;
+    border-radius: 20px;
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .insight-box::before {
+    content: '"';
+    position: absolute;
+    top: -10px; right: 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 120px;
+    color: white;
+    opacity: 0.06;
+    line-height: 1;
+  }
+
+  .insight-box p {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.7;
+    position: relative;
+  }
+
+  .insight-box strong {
+    color: #FFB347;
+  }
+
+  /* ── CREDENTIALS ── */
+  .creds-section {
+    background: var(--card);
+    border-top: 1.5px solid var(--line);
+    border-bottom: 1.5px solid var(--line);
+    padding: 70px 24px;
+  }
+
+  .cred-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    background: var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-top: 36px;
+  }
+
+  .cred-item {
+    background: var(--card);
+    padding: 28px 20px;
+    text-align: center;
+  }
+
+  .cred-number {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--accent);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .cred-label {
+    font-size: 13px;
+    color: var(--ink-light);
+    line-height: 1.4;
+  }
+
+  /* ── WHAT YOU GET ── */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 36px;
+    position: relative;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute;
+    left: 19px; top: 32px; bottom: 32px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2));
+    opacity: 0.2;
+  }
+
+  .step {
+    display: flex;
+    gap: 20px;
+    padding: 24px 0;
+    border-bottom: 1.5px solid var(--line);
+  }
+
+  .step:last-child { border-bottom: none; }
+
+  .step-num {
+    width: 40px; height: 40px;
+    min-width: 40px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 16px;
+  }
+
+  .step-content h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .step-content p {
+    font-size: 14px;
+    color: var(--ink-light);
+    line-height: 1.6;
+  }
+
+  /* ── REVIEWS ── */
+  .reviews-section {
+    background: #F5F5F0;
+    padding: 70px 24px;
+  }
+
+  .review-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 36px;
+  }
+
+  .review-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1.5px solid var(--line);
+  }
+
+  .review-stars {
+    color: #FFB347;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .review-text {
+    font-size: 15px;
+    line-height: 1.75;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+
+  .review-text strong {
+    background: var(--highlight);
+    padding: 0 3px;
+    border-radius: 3px;
+  }
+
+  .review-author {
+    font-size: 13px;
+    color: var(--ink-light);
+    font-weight: 500;
+  }
+
+  /* ── PRICING ── */
+  .pricing-section {
+    padding: 80px 24px;
+  }
+
+  .pricing-card {
+    background: var(--ink);
+    color: white;
+    border-radius: 24px;
+    padding: 40px 32px;
+    margin-top: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pricing-card::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(232,98,26,0.25) 0%, transparent 70%);
+  }
+
+  .pricing-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+  }
+
+  .pricing-title {
+    font-size: 22px;
+    font-weight: 900;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .pricing-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  .pricing-details {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .pricing-pill {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.85);
+    font-size: 13px;
+    padding: 7px 14px;
+    border-radius: 100px;
+    font-weight: 500;
+  }
+
+  .pricing-amount {
+    margin-bottom: 32px;
+  }
+
+  .pricing-amount .amount {
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .pricing-amount .unit {
+    font-size: 18px;
+    color: rgba(255,255,255,0.6);
+    margin-left: 4px;
+  }
+
+  .pricing-amount .note {
+    font-size: 13px;
+    color: var(--accent);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  .include-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 36px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .include-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.5;
+  }
+
+  .include-list li::before {
+    content: '✓';
+    color: #7ECBA1;
+    font-weight: 700;
+    min-width: 16px;
+    margin-top: 1px;
+  }
+
+  .btn-white {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: white;
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 700;
+    padding: 18px 32px;
+    border-radius: 14px;
+    text-decoration: none;
+    transition: all 0.2s;
+    width: 100%;
+  }
+
+  .btn-white:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.2);
+  }
+
+  .limit-note {
+    text-align: center;
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 14px;
+  }
+
+  /* ── KAKAO ── */
+  .kakao-section {
+    padding: 0 24px 80px;
+  }
+
+  .kakao-card {
+    background: #FEE500;
+    border-radius: 20px;
+    padding: 32px 28px;
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .kakao-card .emoji { font-size: 32px; margin-bottom: 12px; }
+
+  .kakao-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1A1A1A;
+    margin-bottom: 8px;
+  }
+
+  .kakao-card p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .btn-kakao {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #3A1D1D;
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 14px 28px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-kakao:hover { opacity: 0.85; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 32px 24px;
+    border-top: 1.5px solid var(--line);
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink-light);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 0.5; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (min-width: 600px) {
+    .review-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .cred-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="badge">💼 AI 루틴 설계 1:1 컨설팅</div>
+    <h1>그래서 나는 AI<br><em>어떻게 써요?</em></h1>
+    <p class="hero-sub">
+      AI 안 쓰면 뒤쳐지는 건 알겠는데 막상 내 사업에 어떻게 적용할지 모르겠다면,<br>
+      그 질문에 딱 맞는 답을 드리는 시간입니다.
+    </p>
+    <div class="hero-meta">
+      <span>🕐 120분</span>
+      <div class="dot"></div>
+      <span>대면(왕십리) or 줌</span>
+      <div class="dot"></div>
+      <span>1:1 맞춤 설계</span>
+    </div>
+    <div class="cta-wrap">
+      <a href="#pricing" class="btn-primary">
+        신청하기 →
+      </a>
+      <a href="#what" class="btn-secondary">
+        어떤 시간인지 먼저 볼게요 ↓
+      </a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section class="section" id="what">
+  <div class="section-inner">
+    <p class="section-label reveal">혹시 이런 분이세요?</p>
+    <h2 class="reveal">AI가 좋다는 건<br>아는데…</h2>
+    <ul class="checklist reveal">
+      <li>
+        <div class="check-icon">☑</div>
+        AI 좋다는 건 아는데, 정작 <strong>내 업무에 어떻게 쓰는지</strong> 모르겠다
+      </li>
+      <li>
+        <div class="check-icon">☑</div>
+        챗GPT 가입은 했는데 결국 맨날 <strong>검색용으로만</strong> 쓴다
+      </li>
+      <li>
+        <div class="check-icon">☑</div>
+        유튜브, 인스타 강의 많이 봤는데 <strong>내 상황에 딱 맞는 답</strong>을 못 찾겠다
+      </li>
+      <li>
+        <div class="check-icon">☑</div>
+        AI 쓰면 시간이 줄 것 같은데 <strong>어디서부터 시작할지</strong> 모르겠다
+      </li>
+    </ul>
+    <div class="insight-box reveal">
+      <p>
+        사실 이게 당연한 거예요.<br>
+        AI는 일반 지식이 아니라<br>
+        <strong>"내 업무에 꽂히는 순간"</strong> 달라지거든요.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CREDENTIALS -->
+<section class="creds-section">
+  <div class="section-inner">
+    <p class="section-label reveal">강사 소개</p>
+    <h2 class="reveal">지원쌤은 누구예요?</h2>
+    <p class="reveal" style="color: var(--ink-light); font-size: 15px; margin-bottom: 0;">
+      EBS 최연소 영어 강사 출신. 지금은 AI 교육에 올인하고 있어요.<br>
+      이론 말고, 사장님들 실무에 바로 꽂히는 AI 활용법만 합니다.
+    </p>
+    <div class="cred-grid reveal">
+      <div class="cred-item">
+        <div class="cred-number">2,400+</div>
+        <div class="cred-label">강의 횟수</div>
+      </div>
+      <div class="cred-item">
+        <div class="cred-number">200+</div>
+        <div class="cred-label">AI 컨설팅<br>수혜 원장님</div>
+      </div>
+      <div class="cred-item">
+        <div class="cred-number">12.4만</div>
+        <div class="cred-label">인스타<br>팔로워</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU GET -->
+<section class="section">
+  <div class="section-inner">
+    <p class="section-label reveal">90분 동안 이런 걸 해요</p>
+    <h2 class="reveal">직접 세팅하고<br>바로 씁니다</h2>
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-num" style="background: var(--highlight); color: #B8860B; font-size: 13px; font-weight: 900;">시작</div>
+        <div class="step-content">
+          <h4>궁금한 거 다 가져오세요 — 전부 답해드립니다</h4>
+          <p>평소에 "여기에 AI 쓰면 좋겠다" 싶었던 것들, 막연하게 떠도는 AI 관련 질문들, 뭔지도 모르겠는데 들어본 것들 — 전부 가져오세요. 어떤 질문도 환영합니다. 이 시간을 위해 모아두셨다 꺼내면 돼요.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>업무 루틴 분석</h4>
+          <p>하루 중 어디서 시간을 낭비하는지, 어느 지점이 AI로 대체 가능한지 찾습니다.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>AI 꽂아넣기</h4>
+          <p>어떤 툴을, 어떤 프롬프트로, 어디에 쓰는지 — 사장님 업종에 맞게 설계합니다.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>바로 실습</h4>
+          <p>제 화면 보면서 같이 해봅니다. 오늘 끝나고 혼자서도 쓸 수 있게.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>맞춤 정리본 PDF 제공</h4>
+          <p>오늘 세팅한 프롬프트, 툴, 루틴을 정리해서 드립니다. 까먹어도 괜찮아요.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-section">
+  <div class="section-inner">
+    <p class="section-label reveal">실제 후기</p>
+    <h2 class="reveal">수강생분들이<br>직접 쓴 이야기예요</h2>
+    <div class="review-grid" style="grid-template-columns: 1fr;">
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">
+          GPT를 거의 매일 사용하는데 매번 챗지 헙박하느라 정신 없었던 것 같아요. 원하지 않는 답이 나올 때 진짜 이이가 없는 명령이로 헙박 했는데 기본 정보부터 수정되야 하고 구체적으로 대답한다는 가장 기본 프로세스부터 친절히 접근하여 알려주셨어요. AI? 막히던 그냥 편하대~ 근데 왜 편해? 그 방법을 A부터 Z까지 아주 자세하게 알려주셨어요. <strong>설명이 넘 간단하고 이해쏙쏙 잘 되어서 딱 한번만 들어도 직관적으로 바로 몸이 움직여 따라하는 저를 발견했도 됩니다.</strong> 단순 텍스트 결과물에서 벗어나 머리속에 있는 것을 구체화 시키고 더 좋은 아이디어를 얻을 수 있는 다양함을 경험할 수 있어 한끝차이가 매우 중요함을 느꼈어요. 강의 신청한 나 너무 칭찬합니다.
+        </p>
+        <div class="review-author">박지** · 수강생</div>
+      </div>
+
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">
+          지원쌤 선생님의 AI 자동화 강의를 들으면서, 나 혼자 하던 수많은 수작업들이 정말 많이 줄어들 수 있다는 걸 처음 실감했다. ChatGPT, Claude, Lilys, NotebookLM 같은 도구들을 어떻게 활용해야 하는지 막막했는데, <strong>직접 시연해주시고 바로 따라할 수 있는 프롬프트까지 알려주셔서 훨씬 쉽게 다가갈 수 있었다.</strong> 이제는 마치 비서 두 명을 둔 것처럼 일할 수 있게 되었다. 아직은 소규모 공부방이지만, 대형 학원 시스템 못지않게 효율적으로 일할 수 있는 기반을 갖춘 것 같다. 막연했던 자동화가 나에게도 가능하다는 걸 알게 해준 강의.
+        </p>
+        <div class="review-author">류연** · 공부방 원장</div>
+      </div>
+
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">
+          정말 멍불허전! 이런 혜자스러운 강의는 다시 못해주신다고 자신하신만큼 와우와우! 탄성이 쏟아져나오는 강의었어요~ 바로 딸깍할 수 있는 Chat GPT 프롬프트만도 대단한데, Notebokok LM과 Claude 활용까지 함께 알려주셔서, <strong>학원업무에 깨알같이 사용할 수 있어, 만드는 프롬프팅을 신청했어요!!!</strong> 정말 제게 딱 맞는 세미나를 만났어요~ 특히, 설명 만들고 직접 해보지 않으면, '내것화'하기 이려운데, 마지막에 실습으로 궁금증도 해결해주셔서 너무 감사했이요~
+        </p>
+        <div class="review-author">황지** · 학원 원장</div>
+      </div>
+
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">
+          딩~하게 뒷통수 맞은 지원쌤의 AI 강의. 이 강의를 안 들었으면 전 여전히 구시대 사람의 마인드로 살아갈뻔했어요. 그냥 혼자서 차근차근 학원 업무를 처리하면 되는 거지 굳이 배울 필요가 없을줄 알았고, 뭐가 문제인지 생각했는데 정말 문제없었네요. 몇 시간, 때론 며칠을 걸려 해결할 문제들도 <strong>이렇게 순식간에 처리된다고? 언제 이렇게 기술이 발전한 걸까요?!</strong> 정말 놀라움의 연속이었습니다. 계속 복습해서 제 것으로 잘 만들어가겠습니다.
+        </p>
+        <div class="review-author">박은** · 학원 원장</div>
+      </div>
+
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">
+          챗 지피티를 즐겨 사용하곤 했지만, 느낌대로 사용하고 있었습니다. 제대로 배워 본적은 없어서 뭔가 이 배후에(?) 있는 지식들과 활용점들을 알고싶다고 막연하게 생각만 하고 있었어요. 내 머릿속에만 있는 것을 내가 정리하고 자료화 하는데에 엄청난 시간이 들고 한계에 부딪혀 결국 타협해서 이 정도까지만 하자... 할 때가 있는게 사실인데 <strong>오늘 이 귀한 강의를 통해 앞으로 양질의 자료들을 요리조리 만들어볼 수 있음에 설레고 기쁩니다!!</strong> 처음 들어봐 유용한 AI 툴도 알게 되고, 사용해보는데 느낌이 좋~~습니다!
+        </p>
+        <div class="review-author">송혜** · 수강생</div>
+      </div>
+
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">
+          딸각 하나로 워크북만들기, 학부모CS 상담까지 간편하게 할수 있어서 정말 좋았어요! <strong>이마이마한 프롬프트를 받으니 든든한 비서 10명 둔 기분입니다!!</strong>
+        </p>
+        <div class="review-author">이유** · 학원 원장</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="section-inner">
+    <p class="section-label reveal">신청하기</p>
+    <h2 class="reveal">AI 비서 1명,<br>오늘 채용하세요</h2>
+    <div class="pricing-card reveal">
+      <div class="pricing-tag">🔥 이번 달 선착순 5명</div>
+      <div class="pricing-title">AI 루틴 설계 1:1 컨설팅</div>
+      <div class="pricing-sub">사장님 업무에 AI를 직접 꽂아드립니다. 이론 없이, 실무만.</div>
+      <div class="pricing-details">
+        <div class="pricing-pill">🕐 120분</div>
+        <div class="pricing-pill">💻 줌 or 대면</div>
+        <div class="pricing-pill">📍 대면 시 서울 왕십리</div>
+        <div class="pricing-pill">📄 정리본 PDF 제공</div>
+      </div>
+      <div class="pricing-amount">
+        <div style="font-size:14px; color:rgba(255,255,255,0.45); text-decoration:line-through; margin-bottom:4px;">정가 400,000원</div>
+        <span class="amount">360,000원</span>
+        <div class="note">🎁 기간 한정 10% 할인 적용 중</div>
+      </div>
+      <ul class="include-list">
+        <li><strong style="color:#7ECBA1;">[수업 1주 전]</strong> 사전 컨설팅 질문지 발송 — 사장님 업무와 고민 미리 파악</li>
+        <li><strong style="color:#7ECBA1;">[수업 1주 전]</strong> 지원쌤이 직접 사전 맞춤 진단 및 컨설팅 자료 작성 — 당일 바로 실전 진입 가능</li>
+        <li><strong style="color:#7ECBA1;">[당일]</strong> 실제 컨설팅 120분 + α — 120분 지나도 결과물 나올 때까지 끝까지 함께합니다</li>
+        <li><strong style="color:#7ECBA1;">[당일 이후]</strong> 사전 준비 자료 + 컨설팅 결과지 + 수업 자료 전체 공유</li>
+        <li><strong style="color:#7ECBA1;">[수업 후 1주일]</strong> 카카오톡 질문 무제한 — 혼자 해보다 막히면 바로 물어보세요</li>
+      </ul>
+      <a href="https://smartstore.naver.com/daeunon/products/13241286917" class="btn-white" target="_blank">
+        지금 신청하기 →
+      </a>
+      <p class="limit-note">* 신청 폼 제출 후 24시간 내 연락드립니다</p>
+    </div>
+  </div>
+</section>
+
+<!-- KAKAO -->
+<section class="kakao-section">
+  <div class="kakao-card reveal">
+    <div class="emoji">💬</div>
+    <h3>아직 망설여지시면?</h3>
+    <p>결제 전에 궁금한 거 먼저 물어보셔도 됩니다.<br>"컨설팅 문의"라고만 보내주세요.</p>
+    <a href="https://open.kakao.com/o/swpZanli" class="btn-kakao" target="_blank">
+      카카오 채널 추가하기
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>© 지원쌤 AI 교육 | 문의: 카카오 채널</p>
+  <p style="margin-top: 6px; font-size: 12px; color: #aaa;">이 페이지의 내용은 무단 복제를 금합니다.</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
